@@ -354,7 +354,13 @@ df = (
     .option("query", query)
     .load()
 )
+df = df.toPandas()
+df['fraud'] = df['labels'].apply(lambda x: 'Fraud' if 'Fraud' in x else 'No Fraud')
 
 # COMMAND ----------
 
-df[['count_transactions', 'fraud']].groupby('fraud').quantile([0.0, 0.1, 0.25, .5, 0.75, .90, .90, 1.0])
+(
+    df[['amount', 'fraud']]
+    .groupby('fraud')
+    .quantile([0.0, 0.1, 0.25, .5, 0.75, .90, .90, 1.0])
+)
